@@ -63,7 +63,8 @@ class MinimumBlocks(object):
         for lst in perm_of_str_b:
             # print(lst)
             for substring in lst:
-                if len(substring) > 1:  # because all substring of len 1 already connected in the graph
+                size = len(substring)
+                if size > 1:  # because all substring of len 1 already connected in the graph
                     matches = re.finditer(substring, self.str_a)
                     matches_positions = [match.start() for match in matches]
                     # print("look here")
@@ -71,13 +72,12 @@ class MinimumBlocks(object):
                     # print(len(substring))
                     # print(matches_positions)
                     for idx in matches_positions:
-                        size = len(substring)
                         # print(str(idx), str(size + idx), substring)
                         if self.graph.getEdge(idx, idx + size) is None:
                             self.graph.addEdge(idx, idx + size)
 
-    def find(self, str, ch):
-        return [i for i, ltr in enumerate(str) if ltr == ch]
+    # def find(self, str, ch):
+    #     return [i for i, ltr in enumerate(str) if ltr == ch]
 
     # def make_graph_by_indexes(self, lst):
     #     graph = Graph.Graph()
