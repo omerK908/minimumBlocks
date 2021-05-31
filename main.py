@@ -3,7 +3,7 @@ import Minimun_Blocks
 
 def makeGraph():
 
-    mb = Minimun_Blocks.MinimumBlocks("abcb", "cbab")
+    mb = Minimun_Blocks.MinimumBlocks("babcbcab", "acbbabcb")
     # a = 0
     # b = 9
     # mb.graph.addEdge(a, b)

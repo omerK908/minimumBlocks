@@ -1,3 +1,5 @@
+import re
+
 import Graph
 
 result_idx = []
@@ -21,14 +23,21 @@ def all_partitions(string):
 
 
 class MinimumBlocks(object):
+
     def __init__(self, str_a, str_b):
         self.graph = Graph.Graph()
         self.str_a = str_a
         self.str_b = str_b
         self.init_graph(self.graph)
+        self.make_edges_by_permotations()
 
-        partitions = self.partitions(str_b)
-        filtered_idx = self.filter(lst=partitions, first_letter=str_a[:1])
+        # partitions_of_str_b = self.partitions(str_b)
+        # print(len(partitions_of_str_b))
+        #
+        # if str_a[:1] != str_b[:1]:
+        #     partitions_of_str_b = self.filter(lst=partitions_of_str_b, first_letter=str_a[:1])
+
+        # print(filtered_idx)
         # tmp = self.make_edges_by_permotations()
 
     def init_graph(self, graph):
@@ -51,9 +60,24 @@ class MinimumBlocks(object):
 
     def make_edges_by_permotations(self):
         perm_of_str_b = self.partitions(self.str_b)
-        for lst in result_idx:
-            tmp_graph = self.make_graph_by_indexes(lst)
-            # need to continue
+        for lst in perm_of_str_b:
+            # print(lst)
+            for substring in lst:
+                if len(substring) > 1:  # because all substring of len 1 already connected in the graph
+                    matches = re.finditer(substring, self.str_a)
+                    matches_positions = [match.start() for match in matches]
+                    # print("look here")
+                    # print(substring)
+                    # print(len(substring))
+                    # print(matches_positions)
+                    for idx in matches_positions:
+                        size = len(substring)
+                        # print(str(idx), str(size + idx), substring)
+                        if self.graph.getEdge(idx, idx + size) is None:
+                            self.graph.addEdge(idx, idx + size)
+
+    def find(self, str, ch):
+        return [i for i, ltr in enumerate(str) if ltr == ch]
 
     # def make_graph_by_indexes(self, lst):
     #     graph = Graph.Graph()
@@ -66,8 +90,12 @@ class MinimumBlocks(object):
     def filter(self, lst, first_letter):
         ans = []
         for l in lst:
+            flag = False
             for str in l:
                 if first_letter in str[0:1]:
                     ans.append(l)
-                    pass
+                    flag = True
+                    break
+            if flag:
+                pass
         return ans

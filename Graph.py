@@ -44,11 +44,11 @@ class Graph(object):
         else:
             return False
 
-    def getEdge(self, keyFrom, keyTo):
-        srcVertex = self.getVertex(keyFrom)
-        edge = srcVertex.getEdge(keyTo)
+    def getEdge(self, key_src, key_dst):
+        srcVertex = self.getVertex(key_src)
+        edge = srcVertex.getEdge(key_dst)
         if edge == None:
-            print("getEdge(self," + keyFrom + ", " + keyTo + "): return None")
+            print("getEdge(self," + str(key_src) + ", " + str(key_dst) + "): return None")
         return edge
 
 
