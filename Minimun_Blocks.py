@@ -30,6 +30,12 @@ class MinimumBlocks(object):
         self.str_b = str_b
         self.init_graph(self.graph)
         self.make_edges_by_permotations()
+        # print(self.BFS(self.graph.getVertex(0)))
+        # print(self.graph)
+        list_of_bfs = self.get_all_bfs_path()
+        print(list_of_bfs)
+        print(self.get_substrings_from_bfs(list_of_bfs))
+
 
         # partitions_of_str_b = self.partitions(str_b)
         # print(len(partitions_of_str_b))
@@ -45,7 +51,8 @@ class MinimumBlocks(object):
             graph.addVertex()
 
         for ID in range(0, len(self.str_a)):
-            self.graph.addEdge(ID, ID + 1)
+            graph.addEdge(ID, ID + 1)
+
 
     def get_substring(self, edge):
         if edge is None:
@@ -75,6 +82,82 @@ class MinimumBlocks(object):
                         # print(str(idx), str(size + idx), substring)
                         if self.graph.getEdge(idx, idx + size) is None:
                             self.graph.addEdge(idx, idx + size)
+                            # print(self.str_a[idx: idx + size])
+
+    def make_graph_by_permotations(self, perm_of_str_b):
+        ans_graph = Graph.Graph()
+        self.init_graph(ans_graph)
+
+        for substring in perm_of_str_b:
+            size = len(substring)
+            if size > 1:  # because all substring of len 1 already connected in the graph
+                matches = re.finditer(substring, self.str_a)
+                matches_positions = [match.start() for match in matches]
+                # print("look here")
+                # print(substring)
+                # print(len(substring))
+                # print(matches_positions)
+                for idx in matches_positions:
+                    # print(str(idx), str(size + idx), substring)
+                    if ans_graph.getEdge(idx, idx + size) is None:
+                        ans_graph.addEdge(idx, idx + size)
+                        # print(self.str_a[idx: idx + size])
+        return ans_graph
+
+    def get_all_bfs_path(self):
+        maxSize = len(self.str_a)
+        ans = []
+        permotations = self.partitions(self.str_b)
+        for perm in permotations:
+            g = self.make_graph_by_permotations(perm)
+            # print(str(g) + "asd")
+            bfs_g = self.BFS(g.getVertex(0))
+            if bfs_g is not None and len(bfs_g) < maxSize:
+                maxSize = len(bfs_g)
+                ans.clear()
+                ans.append(bfs_g)
+            elif bfs_g is not None and len(bfs_g) == maxSize:
+                if bfs_g not in ans:
+                    ans.append(bfs_g)
+        return ans
+
+    def get_substrings_from_bfs(self, list_of_bfs):
+        ans = []
+        for graph in list_of_bfs:
+            tmp_list = []
+            src = graph[0]
+            graph.remove(src)
+            while graph:
+                dst = graph[0]
+                graph.remove(dst)
+                tmp_list.append(self.str_a[src:dst])
+                src = dst
+            ans.append(tmp_list)
+        return ans
+
+
+
+    def BFS(self, s):
+        llist = []
+        list_hashMap = {}
+        llist.append(s)
+        list_hashMap[s.getId()] = s
+        closeList = {}
+        while llist:
+            vertexSrc = llist.pop(0)
+            closeList[vertexSrc.getId()] = vertexSrc
+            for edgeId in vertexSrc.edges:
+                edge = vertexSrc.edges[edgeId]
+                vertexDst = edge.getDstNode()
+                vertexDst.path = vertexSrc.path.copy()
+                vertexDst.path.append(vertexSrc.getId())
+                if vertexDst.getId() not in closeList and vertexDst.getId() not in list_hashMap:
+                    if vertexDst.getId() == len(self.str_a):
+                        vertexDst.path.append(vertexDst.getId())
+                        return vertexDst.path
+                    llist.append(vertexDst)
+                    list_hashMap[vertexDst.getId()] = vertexDst
+        return None
 
     # def find(self, str, ch):
     #     return [i for i, ltr in enumerate(str) if ltr == ch]
@@ -87,15 +170,15 @@ class MinimumBlocks(object):
     #         graph.addEdge(src, dst)
     #     return graph
 
-    def filter(self, lst, first_letter):
-        ans = []
-        for l in lst:
-            flag = False
-            for str in l:
-                if first_letter in str[0:1]:
-                    ans.append(l)
-                    flag = True
-                    break
-            if flag:
-                pass
-        return ans
+    # def filter(self, lst, first_letter):
+    #     ans = []
+    #     for l in lst:
+    #         flag = False
+    #         for str in l:
+    #             if first_letter in str[0:1]:
+    #                 ans.append(l)
+    #                 flag = True
+    #                 break
+    #         if flag:
+    #             pass
+    #     return ans

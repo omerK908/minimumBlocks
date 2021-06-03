@@ -66,6 +66,6 @@ def partitions(string):
     return ans
 
 
-s1 = 'asd'
-s2 = 'ghj'
+s1 = "abaxxxababaxxxxab"
+s2 = "baxxxxababaxxxaba"
 print("Minimum Blocks: ", minimum_blocks(s1, s2))

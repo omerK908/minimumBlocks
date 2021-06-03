@@ -29,7 +29,7 @@ class Edge(object):
         return self.weight
 
     def __str__(self):
-        return str(self.key)
+        return str(str(self.getSrcNode().getId()) + "-" + str(self.key))
 
 
 

@@ -47,9 +47,18 @@ class Graph(object):
     def getEdge(self, key_src, key_dst):
         srcVertex = self.getVertex(key_src)
         edge = srcVertex.getEdge(key_dst)
-        if edge == None:
-            print("getEdge(self," + str(key_src) + ", " + str(key_dst) + "): return None")
+        # if edge == None:
+        #     print("getEdge(self," + str(key_src) + ", " + str(key_dst) + "): return None")
         return edge
+
+    def __str__(self):
+        ans = ""
+        for v in self.vertexes:
+            tmp1 = self.vertexes[v]
+            for e in tmp1.edges:
+                tmp2 = tmp1.edges[e]
+                ans = ans + str(tmp2) + " "
+        return ans
 
 
 
