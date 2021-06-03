@@ -25,11 +25,11 @@ def all_partitions(string):
 class MinimumBlocks(object):
 
     def __init__(self, str_a, str_b):
-        self.graph = Graph.Graph()
+        # self.graph = Graph.Graph()
         self.str_a = str_a
         self.str_b = str_b
-        self.init_graph(self.graph)
-        self.make_edges_by_permotations()
+        # self.init_graph(self.graph)
+        # self.make_edges_by_permotations()
         # print(self.BFS(self.graph.getVertex(0)))
         # print(self.graph)
         list_of_bfs = self.get_all_bfs_path()
@@ -110,13 +110,20 @@ class MinimumBlocks(object):
         permotations = self.partitions(self.str_b)
         for perm in permotations:
             g = self.make_graph_by_permotations(perm)
-            # print(str(g) + "asd")
-            bfs_g = self.BFS(g.getVertex(0))
-            if bfs_g is not None and len(bfs_g) < maxSize:
+
+            bfs_g = self.BFS(g.getVertex(0), len(self.str_a))
+
+            # print("______")
+            # print(perm)
+            # print(str(g))
+            # print("BFS: " + str(bfs_g))
+
+            if len(bfs_g) < maxSize:
+
                 maxSize = len(bfs_g)
                 ans.clear()
                 ans.append(bfs_g)
-            elif bfs_g is not None and len(bfs_g) == maxSize:
+            elif len(bfs_g) == maxSize:
                 if bfs_g not in ans:
                     ans.append(bfs_g)
         return ans
@@ -125,19 +132,18 @@ class MinimumBlocks(object):
         ans = []
         for graph in list_of_bfs:
             tmp_list = []
-            src = graph[0]
-            graph.remove(src)
+            src = graph.pop(0)
             while graph:
-                dst = graph[0]
-                graph.remove(dst)
+                dst = graph.pop(0)
                 tmp_list.append(self.str_a[src:dst])
                 src = dst
             ans.append(tmp_list)
         return ans
 
-
-
-    def BFS(self, s):
+    def BFS(self, s, goal_id):
+        # s1 = "abcac"
+        # s2 = "bcaac"
+        # "bc""ac""a"
         llist = []
         list_hashMap = {}
         llist.append(s)
@@ -149,10 +155,12 @@ class MinimumBlocks(object):
             for edgeId in vertexSrc.edges:
                 edge = vertexSrc.edges[edgeId]
                 vertexDst = edge.getDstNode()
-                vertexDst.path = vertexSrc.path.copy()
-                vertexDst.path.append(vertexSrc.getId())
+                if not vertexDst.visited:
+                    vertexDst.path = vertexSrc.path.copy()
+                    vertexDst.path.append(vertexSrc.getId())
+                    vertexDst.visited = True
                 if vertexDst.getId() not in closeList and vertexDst.getId() not in list_hashMap:
-                    if vertexDst.getId() == len(self.str_a):
+                    if vertexDst.getId() == goal_id:
                         vertexDst.path.append(vertexDst.getId())
                         return vertexDst.path
                     llist.append(vertexDst)

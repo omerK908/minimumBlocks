@@ -68,4 +68,7 @@ def partitions(string):
 
 s1 = "abaxxxababaxxxxab"
 s2 = "baxxxxababaxxxaba"
+
+s1 = "abcac"
+s2 = "bcaac"
 print("Minimum Blocks: ", minimum_blocks(s1, s2))

@@ -2,6 +2,7 @@
 class Vertex(object):
 
     def __init__(self, key):
+        self.visited = False
         self.path = []
         self.id = key
         self.edges = {}
