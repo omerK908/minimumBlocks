@@ -11,10 +11,9 @@ def minimum_blocks(str_1, str_2):
     all_same_partitions = []
     ans.append(split(str_1))
     count = len(str_1)
-    list_a = partitions(str_1)
-    list_b = partitions(str_2)
-    for tmp1 in list_a:
-        for tmp2 in list_b:
+
+    for tmp1 in all_partitions(str_1):
+        for tmp2 in all_partitions(str_2):
             if one_valued(tmp1, tmp2):
                 all_same_partitions.append(tmp1)
                 if len(tmp1) <= count:  # are One-valued and on
@@ -57,13 +56,6 @@ def all_partitions(string):
                 lastcut = i+1
         result.append(string[lastcut:])
         yield result
-
-
-def partitions(string):
-    ans = []
-    for partition in all_partitions(string):
-        ans.append(partition)
-    return ans
 
 
 s1 = "abaxxxababaxxxxab"
