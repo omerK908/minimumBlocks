@@ -9,8 +9,6 @@ class Edge(object):
         self.src = src_vertex
         self.dst = dst_vertex
 
-
-
     # def getConnections(self):
     #     return self.connectedTo.keys()
 
@@ -22,7 +20,6 @@ class Edge(object):
 
     def getKey(self):
         return self.key
-
 
     def __str__(self):
         return str(str(self.getSrcNode().getId()) + "-" + str(self.key))

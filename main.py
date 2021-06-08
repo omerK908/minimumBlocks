@@ -8,8 +8,7 @@ import Minimun_Blocks
 
 
 def run_minimum_blocks():
-    s1 = "abcac"
-    s2 = "bcaac"
+
     s1 = "abaxxxababaxxxxab"
     s2 = "baxxxxababaxxxaba"
     s1 = "abaxxxababaxxxxabtturffqsqq"
