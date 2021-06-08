@@ -6,12 +6,12 @@ class Graph(object):
 
     def __init__(self):
         self.vertexes = {}
-        self.totalNum = 0
+        self.vertex_counter = 0
 
     def addVertex(self):
-        newVertex = Vertex.Vertex(self.totalNum)
-        self.vertexes[self.totalNum] = newVertex
-        self.totalNum += 1
+        newVertex = Vertex.Vertex(self.vertex_counter)
+        self.vertexes[self.vertex_counter] = newVertex
+        self.vertex_counter += 1
         return newVertex
 
     def getVertex(self, vertex_id):
@@ -20,7 +20,7 @@ class Graph(object):
         else:
             return None
 
-    def addEdge(self, from_vertex_id, to_vertex_id, weight=0):
+    def addEdge(self, from_vertex_id, to_vertex_id):
         if from_vertex_id not in self.vertexes:
             print("from_vertex_id not in vertexes")
             return

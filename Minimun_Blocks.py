@@ -5,22 +5,6 @@ import Graph
 result_idx = []
 
 
-def all_partitions(string):
-    # returns all the partitions of string
-    for cutpoints in range(1 << (len(string) - 1)):
-        result = []
-        result_idx_tmp = []
-        lastcut = 0
-        for i in range(len(string) - 1):
-            if (1 << i) & cutpoints != 0:
-                result.append(string[lastcut:(i + 1)])
-                result_idx_tmp.append([lastcut, i + 1])
-                lastcut = i + 1
-        result.append(string[lastcut:])
-
-        result_idx_tmp.append([lastcut, len(string)])
-        result_idx.append(result_idx_tmp)
-        yield result
 
 
 class MinimumBlocks(object):
@@ -28,8 +12,8 @@ class MinimumBlocks(object):
     def __init__(self, str_a, str_b):
         self.str_a = str_a
         self.str_b = str_b
-        list_of_bfs = self.get_all_bfs_path()
-        print(self.get_substrings_from_bfs(list_of_bfs))
+
+
 
     def init_graph(self, graph):
         for _ in range(len(self.str_a) + 1):
@@ -44,10 +28,42 @@ class MinimumBlocks(object):
         return self.str_a[edge.getSrcNode().getId(): edge.getDstNode().getId()]
 
     def partitions(self, string):
-        ans = []
-        for partition in all_partitions(string):
-            ans.append(partition)
-        return ans
+        # returns all the partitions of string
+        for cutpoints in range(1 << (len(string) - 1)):
+            result = []
+            result_idx_tmp = []
+            lastcut = 0
+            for i in range(len(string) - 1):
+                if (1 << i) & cutpoints != 0:
+                    result.append(string[lastcut:(i + 1)])
+                    result_idx_tmp.append([lastcut, i + 1])
+                    lastcut = i + 1
+            result.append(string[lastcut:])
+
+            # result_idx_tmp.append([lastcut, len(string)])
+            # result_idx.append(result_idx_tmp)
+            yield result
+
+    def substrings(self, string):
+        # returns all the substrings of string
+        res = [string[i: j] for i in range(len(string))
+               for j in range(i + 1, len(string) + 1)]
+        return res
+
+    def make_graph_by_substrings(self, substrings_list):
+        # add edges by the permutation of str_b on the linear graph of str_a
+        ans_graph = Graph.Graph()
+        self.init_graph(ans_graph)  # init graph by str_a
+        # add edges by perm of str_b
+        for substring in substrings_list:
+            size = len(substring)
+            if size > 1:  # because all substring of len 1 already connected in the graph
+                matches = re.finditer(substring, self.str_a)
+                matches_positions = [match.start() for match in matches]
+                for idx in matches_positions:
+                    if ans_graph.getEdge(idx, idx + size) is None:
+                        ans_graph.addEdge(idx, idx + size)
+        return ans_graph
 
     # def make_edges_by_permutations(self):
     #     perm_of_str_b = self.partitions(self.str_b)
@@ -136,3 +152,11 @@ class MinimumBlocks(object):
                     list_hashMap[vertexDst.getId()] = vertexDst
 
         return None
+
+    def run(self):
+        # list_of_bfs = self.get_all_bfs_path()
+        # print(self.get_substrings_from_bfs(list_of_bfs))
+
+        g = self.make_graph_by_substrings(self.substrings(self.str_b))
+        bfs_g = [self.BFS(g.getVertex(0), len(self.str_a))]
+        return self.get_substrings_from_bfs(bfs_g)
