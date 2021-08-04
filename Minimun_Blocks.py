@@ -6,8 +6,11 @@ import Graph
 class MinimumBlocks(object):
 
     def __init__(self, str_a, str_b):
-        self.str_a = str_a
-        self.str_b = str_b
+        if self.is_good(str_a, str_b):
+            self.str_a = str_a
+            self.str_b = str_b
+        else:
+            raise Exception("string doesnt match")
 
     def init_graph(self, graph):
         for _ in range(len(self.str_a) + 1):
@@ -28,7 +31,7 @@ class MinimumBlocks(object):
         return res
 
     def make_graph_by_substrings(self, substrings_list):
-        # add edges by the permutation of str_b on the linear graph of str_a
+        # add edges by the substrings of str_b on the linear graph of str_a
         ans_graph = Graph.Graph()
         self.init_graph(ans_graph)  # init graph by str_a
         # add edges by perm of str_b
@@ -87,16 +90,18 @@ class MinimumBlocks(object):
         # list_of_bfs = self.get_all_bfs_path()
         # print(self.get_substrings_from_bfs(list_of_bfs))
 
-        g = self.make_graph_by_substrings(self.substrings(self.str_b))
-        bfs_g = [self.BFS(g.getVertex(0), len(self.str_a))]
-        return self.get_substrings_from_bfs(bfs_g)
+        g1 = self.make_graph_by_substrings(self.substrings(self.str_b))
+        bfs_g1 = [self.BFS(g1.getVertex(0), len(self.str_a))]
+        # g2 = self.make_graph_by_substrings(self.substrings(self.str_a))
+        # bfs_g2 = [self.BFS(g2.getVertex(0), len(self.str_b))]
+        #
+        # set_1 = set(bfs_g1)
+        # set_2 = set(bfs_g2)
+        #
+        # list_2_items_not_in_list_1 = list(set_2 - set_1)
+        # combined_bfs = bfs_g1 + list_2_items_not_in_list_1
 
-
-
-
-
-
-
+        return self.get_substrings_from_bfs(bfs_g1)
 
     # def make_edges_by_permutations(self):
     #     perm_of_str_b = self.partitions(self.str_b)
@@ -161,3 +166,6 @@ class MinimumBlocks(object):
     #         # result_idx_tmp.append([lastcut, len(string)])
     #         # result_idx.append(result_idx_tmp)
     #         yield result
+    def is_good(self, str_a, str_b):
+        return len(str_a) == len(str_b) and sorted(str_a) == sorted(str_b)
+
