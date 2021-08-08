@@ -6,9 +6,12 @@ import Graph
 class MinimumBlocks(object):
 
     def __init__(self, str_a, str_b):
+
         if self.is_good(str_a, str_b):
             self.str_a = str_a
             self.str_b = str_b
+            self.hash_subs_counter = {}
+            self.init_dict_for_BFS()
         else:
             raise Exception("string doesnt match")
 
@@ -40,9 +43,14 @@ class MinimumBlocks(object):
             if size > 1:  # because all substring of len 1 already connected in the graph
                 matches = re.finditer(substring, self.str_a)
                 matches_positions = [match.start() for match in matches]
+                counter = self.hash_subs_counter[substring]
+
                 for idx in matches_positions:
-                    if ans_graph.getEdge(idx, idx + size) is None:
+                    if counter > 0 and ans_graph.getEdge(idx, idx + size) is None:
                         ans_graph.addEdge(idx, idx + size)
+                    elif counter == 0:
+                        break
+                    counter -= 1
         return ans_graph
 
     def get_substrings_from_bfs(self, list_of_bfs):
@@ -102,6 +110,19 @@ class MinimumBlocks(object):
         # combined_bfs = bfs_g1 + list_2_items_not_in_list_1
 
         return self.get_substrings_from_bfs(bfs_g1)
+
+    # init dict of minimun number of edges to each substring
+    def init_dict_for_BFS(self):
+        subs_b = self.substrings(self.str_b)
+        for substring in subs_b:
+            matches_of_b_in_a = re.finditer(substring, self.str_a)
+            matches_positions_b_in_a = [match.start() for match in matches_of_b_in_a]
+
+            matches_of_a_in_b = re.finditer(substring, self.str_b)
+            matches_positions_a_in_b = [match.start() for match in matches_of_a_in_b]
+
+            self.hash_subs_counter[substring] = min(len(matches_positions_b_in_a), len(matches_positions_a_in_b))
+        print(self.hash_subs_counter)
 
     # def make_edges_by_permutations(self):
     #     perm_of_str_b = self.partitions(self.str_b)
