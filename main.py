@@ -11,17 +11,18 @@ def run_minimum_blocks():
 
     s1 = "abaxxxababaxxxxab"
     s2 = "baxxxxababaxxxaba"
-    # s1 = "abaxxxababaxxxxabtturffqsqq"
-    # s2 = "baxxxxababaxxxabaurfqsqqftt"
-    s1 = "ab axxxababaxxxxab axxxaba baxxxxab"
-    s2 = "baxxxxab ab axxxaba axxxababaxxxxab"
 
-    # s1 = "ab   axxxababaxxxxab axxxababaxxxxab"
-    # s2 = "b  axxxxababaxxxab a axxxababaxxxxab"
+    # s1 = "abaxxxababaxxxxabaxxxababaxxxxab"
+    # s2 = "baxxxxababaxxxabaaxxxababaxxxxab"
+
+    # "ab axxxababaxxxxab axxxaba baxxxxab"
+    # "baxxxxab ab axxxaba axxxababaxxxxab"
+
+    # s1 = "xxabbacbccbxxxa"
+    # s2 = "bbacxxaxxxabccb"
+
     mb = Minimun_Blocks.MinimumBlocks(s1, s2)
     print(mb.run())
-    # mb = Minimun_Blocks.MinimumBlocks(s2, s1)
-    # print(mb.run())
 
 
 if __name__ == '__main__':

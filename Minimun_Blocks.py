@@ -11,7 +11,7 @@ class MinimumBlocks(object):
             self.str_a = str_a
             self.str_b = str_b
             self.hash_subs_counter = {}
-            self.init_dict_for_BFS()
+            self.init_dict_for_BFS()  # O(n * (2^n))
         else:
             raise Exception("string doesnt match")
 
@@ -38,14 +38,14 @@ class MinimumBlocks(object):
         ans_graph = Graph.Graph()
         self.init_graph(ans_graph)  # init graph by str_a
         # add edges by perm of str_b
-        for substring in substrings_list:
+        for substring in substrings_list: #2^n
             size = len(substring)
             if size > 1:  # because all substring of len 1 already connected in the graph
-                matches = re.finditer(substring, self.str_a)
+                matches = re.finditer(substring, self.str_a) #n
                 matches_positions = [match.start() for match in matches]
                 counter = self.hash_subs_counter[substring]
 
-                for idx in matches_positions:
+                for idx in matches_positions: #n
                     if counter > 0 and ans_graph.getEdge(idx, idx + size) is None:
                         ans_graph.addEdge(idx, idx + size)
                     elif counter == 0:
@@ -67,7 +67,7 @@ class MinimumBlocks(object):
             ans.append(tmp_list)
         return ans
 
-    def BFS(self, s, goal_id):
+    def BFS(self, s, goal_id): #n choose 2 = n ^ 2
         # s: the start vertex, goal_id: the id of the last vertex
         llist = []
         list_hashMap = {}
@@ -95,98 +95,24 @@ class MinimumBlocks(object):
         return None
 
     def run(self):
-        # list_of_bfs = self.get_all_bfs_path()
-        # print(self.get_substrings_from_bfs(list_of_bfs))
 
-        g1 = self.make_graph_by_substrings(self.substrings(self.str_b))
+        g1 = self.make_graph_by_substrings(self.substrings(self.str_b)) #O(n * 2^n)
         bfs_g1 = [self.BFS(g1.getVertex(0), len(self.str_a))]
-        # g2 = self.make_graph_by_substrings(self.substrings(self.str_a))
-        # bfs_g2 = [self.BFS(g2.getVertex(0), len(self.str_b))]
-        #
-        # set_1 = set(bfs_g1)
-        # set_2 = set(bfs_g2)
-        #
-        # list_2_items_not_in_list_1 = list(set_2 - set_1)
-        # combined_bfs = bfs_g1 + list_2_items_not_in_list_1
 
         return self.get_substrings_from_bfs(bfs_g1)
 
     # init dict of minimun number of edges to each substring
-    def init_dict_for_BFS(self):
+    def init_dict_for_BFS(self): # O(n * (2^n))
         subs_b = self.substrings(self.str_b)
-        for substring in subs_b:
-            matches_of_b_in_a = re.finditer(substring, self.str_a)
+        for substring in subs_b:  #2^n
+            matches_of_b_in_a = re.finditer(substring, self.str_a)  #n
             matches_positions_b_in_a = [match.start() for match in matches_of_b_in_a]
 
             matches_of_a_in_b = re.finditer(substring, self.str_b)
             matches_positions_a_in_b = [match.start() for match in matches_of_a_in_b]
 
             self.hash_subs_counter[substring] = min(len(matches_positions_b_in_a), len(matches_positions_a_in_b))
-        print(self.hash_subs_counter)
 
-    # def make_edges_by_permutations(self):
-    #     perm_of_str_b = self.partitions(self.str_b)
-    #     for lst in perm_of_str_b:
-    #         # print(lst)
-    #         for substring in lst:
-    #             size = len(substring)
-    #             if size > 1:  # because all substring of len 1 already connected in the graph
-    #                 matches = re.finditer(substring, self.str_a)
-    #                 matches_positions = [match.start() for match in matches]
-    #                 for idx in matches_positions:
-    #                     # print(str(idx), str(size + idx), substring)
-    #                     if self.graph.getEdge(idx, idx + size) is None:
-    #                         self.graph.addEdge(idx, idx + size)
-
-    # def make_graph_by_permutations(self, perm_of_str_b):
-    #     # add edges by the permutation of str_b on the linear graph of str_a
-    #     ans_graph = Graph.Graph()
-    #     self.init_graph(ans_graph)  # init graph by str_a
-    #     # add edges by perm of str_b
-    #     for substring in perm_of_str_b:
-    #         size = len(substring)
-    #         if size > 1:  # because all substring of len 1 already connected in the graph
-    #             matches = re.finditer(substring, self.str_a)
-    #             matches_positions = [match.start() for match in matches]
-    #             for idx in matches_positions:
-    #                 if ans_graph.getEdge(idx, idx + size) is None:
-    #                     ans_graph.addEdge(idx, idx + size)
-    #     return ans_graph
-
-    # def get_all_bfs_path(self):
-    #     # for every permutation of str_b,
-    #     #   build a temporary graph by the permutation and check the length with the bfs func
-    #     maxSize = len(self.str_a)
-    #     ans = []
-    #     permutations = self.partitions(self.str_b)
-    #     for perm in permutations:
-    #         g = self.make_graph_by_permutations(perm)
-    #         bfs_g = self.BFS(g.getVertex(0), len(self.str_a))
-    #         if len(bfs_g) < maxSize:
-    #             maxSize = len(bfs_g)
-    #             ans.clear()
-    #             ans.append(bfs_g)
-    #         elif len(bfs_g) == maxSize:
-    #             if bfs_g not in ans:
-    #                 ans.append(bfs_g)
-    #     return ans
-
-    # def partitions(self, string):
-    #     # returns all the partitions of string
-    #     for cutpoints in range(1 << (len(string) - 1)):
-    #         result = []
-    #         result_idx_tmp = []
-    #         lastcut = 0
-    #         for i in range(len(string) - 1):
-    #             if (1 << i) & cutpoints != 0:
-    #                 result.append(string[lastcut:(i + 1)])
-    #                 result_idx_tmp.append([lastcut, i + 1])
-    #                 lastcut = i + 1
-    #         result.append(string[lastcut:])
-    #
-    #         # result_idx_tmp.append([lastcut, len(string)])
-    #         # result_idx.append(result_idx_tmp)
-    #         yield result
     def is_good(self, str_a, str_b):
         return len(str_a) == len(str_b) and sorted(str_a) == sorted(str_b)
 
