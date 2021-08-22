@@ -15,12 +15,6 @@ def run_minimum_blocks():
     # s1 = "abaxxxababaxxxxabaxxxababaxxxxab"
     # s2 = "baxxxxababaxxxabaaxxxababaxxxxab"
 
-    # "ab axxxababaxxxxab axxxaba baxxxxab"
-    # "baxxxxab ab axxxaba axxxababaxxxxab"
-
-    # s1 = "xxabbacbccbxxxa"
-    # s2 = "bbacxxaxxxabccb"
-
     mb = Minimun_Blocks.MinimumBlocks(s1, s2)
     print(mb.run())
 
